@@ -1,0 +1,92 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.3.4' // use any 3.3.x version, NOT 3.4.x or 3.5.x
+    id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'com.intelidata.acgr'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+javadoc {
+    options {
+        encoding = 'UTF-8'
+        charSet = 'UTF-8'
+        author = true
+        version = true
+        links("https://docs.spring.io/spring-framework/docs/current/javadoc-api/")
+        addStringOption('Xdoclint:none', '-quiet') // ignora warnings
+    }
+}
+
+dependencies {
+    // --- C    ore Spring Boot ---
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+
+    // --- H2 para pruebas ---
+    runtimeOnly 'com.h2database:h2'
+
+    // --- Kafka ---
+    implementation 'org.springframework.kafka:spring-kafka'
+
+    // --- MySQL (para despliegue real) ---
+    runtimeOnly 'com.mysql:mysql-connector-j'
+
+    // --- Twilio (mensajería SMS / llamadas) ---
+    implementation group: 'com.twilio.sdk', name: 'twilio', version: '10.9.1'
+
+    // --- Vonage (mensajería alternativa) ---
+    implementation 'com.vonage:client:7.7.0'
+
+    // --- Jackson y JSR310 para fechas (LocalDate, LocalDateTime, etc.) ---
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+
+    // --- OpenAPI Swagger UI ---
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
+
+    // --- Anotaciones Jakarta (reemplazo de javax.annotation y javax.xml.bind) ---
+    implementation 'jakarta.annotation:jakarta.annotation-api:3.0.0'
+    implementation 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.2'
+    //implementation 'org.glassfish.jaxb:jaxb-runtime:4.0.5'
+
+    implementation 'javax.xml.bind:jaxb-api:2.3.1'
+    implementation 'org.glassfish.jaxb:jaxb-runtime:2.3.1'
+    implementation 'javax.activation:activation:1.1.1'
+
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+
+    // Spring Security
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+    implementation 'com.nimbusds:nimbus-jose-jwt:9.34' // JWT support
+
+    // JWT support
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5' // para JSON
+
+    // --- Testing ---
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.kafka:spring-kafka-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'}
+
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+
