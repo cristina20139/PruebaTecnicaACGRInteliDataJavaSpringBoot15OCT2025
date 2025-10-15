@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>API de Usuarios - Intelidata</title>
+    <link rel="stylesheet" type="text/css" href="https://unpkg.com/swagger-ui-dist/swagger-ui.css" />
+    <style>
+        body { background-color: #f7f9fb; }
+        .topbar { background-color: #2b3a67; }
+        .topbar-wrapper img { content: url('https://upload.wikimedia.org/wikipedia/commons/9/9a/Intelidata_logo.png'); height: 40px; }
+        .swagger-ui .info { color: #2b3a67; }
+    </style>
+</head>
+<body>
+<div id="swagger-ui"></div>
+<script src="https://unpkg.com/swagger-ui-dist/swagger-ui-bundle.js"></script>
+<script>
+    SwaggerUIBundle({
+      url: "/v3/api-docs",
+      dom_id: '#swagger-ui',
+      presets: [SwaggerUIBundle.presets.apis],
+      layout: "BaseLayout"
+    });
+</script>
+</body>
+</html>
