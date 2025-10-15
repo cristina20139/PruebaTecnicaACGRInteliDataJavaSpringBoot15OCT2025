@@ -1,0 +1,52 @@
+# ============================================
+# 🌟 CONFIGURACIÓN GENERAL DEL PROYECTO
+# ============================================
+spring:
+  application:
+    name: PruebaTecnicaACGR
+  main:
+    banner-mode: "console"
+  output:
+    ansi:
+      enabled: ALWAYS  # Colores en consola 🌈
+
+  # ============================================
+  # 🧱 BASE DE DATOS EN MEMORIA (H2)
+  # ============================================
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  h2:
+    console:
+      enabled: true
+      path: /h2-console  # Acceso al panel de H2
+  jpa:
+    hibernate:
+      ddl-auto: update   # crea las tablas automáticamente
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+# ============================================
+# 🚀 CONFIGURACIÓN DEL SERVIDOR
+# ============================================
+server:
+  port: 8080
+  servlet:
+    context-path: /
+
+# ============================================
+# 📘 SWAGGER / OPENAPI PERSONALIZADO
+# ============================================
+springdoc:
+  swagger-ui:
+    path: /docs
+    display-request-duration: true
+    tags-sorter: alpha
+    operations-sorter: method
+    doc-expansion: none
+  api-docs:
+    path: /api-docs
