@@ -1,3 +1,4 @@
+// com/intelidata/acgr/pruebatecnica/infrastructure/security/JwtDecoderConfig.java
 package com.intelidata.acgr.pruebatecnica.infrastructure.security;
 
 import org.springframework.context.annotation.Bean;

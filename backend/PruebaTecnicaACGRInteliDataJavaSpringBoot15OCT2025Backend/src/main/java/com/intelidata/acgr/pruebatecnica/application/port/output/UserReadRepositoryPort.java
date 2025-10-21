@@ -1,3 +1,4 @@
+// com/intelidata/acgr/pruebatecnica/application/port/output/UserReadRepositoryPort.java
 package com.intelidata.acgr.pruebatecnica.application.port.output;
 
 import com.intelidata.acgr.pruebatecnica.domain.model.User;

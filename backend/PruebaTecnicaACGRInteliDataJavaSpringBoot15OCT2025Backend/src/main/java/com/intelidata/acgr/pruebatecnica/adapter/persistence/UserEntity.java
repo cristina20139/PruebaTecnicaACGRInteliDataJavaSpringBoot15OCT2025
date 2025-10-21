@@ -1,3 +1,4 @@
+// com/intelidata/acgr/pruebatecnica/adapter/persistence/UserEntity.java
 package com.intelidata.acgr.pruebatecnica.adapter.persistence;
 
 import jakarta.persistence.*;

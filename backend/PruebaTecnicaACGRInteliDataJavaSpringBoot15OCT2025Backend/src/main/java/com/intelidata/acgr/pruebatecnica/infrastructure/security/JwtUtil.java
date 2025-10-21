@@ -1,3 +1,4 @@
+// com/intelidata/acgr/pruebatecnica/infrastructure/security/JwtUtil.java
 package com.intelidata.acgr.pruebatecnica.infrastructure.security;
 
 import io.jsonwebtoken.Jwts;

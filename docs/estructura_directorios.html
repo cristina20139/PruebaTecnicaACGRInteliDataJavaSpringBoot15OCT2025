@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<title>Estructura de Directorios completa - Proyecto ACGR Prueba Técnica</title>
+<style>
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #fafbfc; color: #23272f; margin: 0; padding: 0; }
+  .container { max-width: 1100px; margin: 40px auto; background: #fff; box-shadow: 0 8px 32px rgba(0,0,0,0.08); border-radius: 10px; padding: 32px 40px; }
+  h1 { color: #1565c0; margin-bottom: 8px; }
+  p.lead { margin-top: 0; color: #4b5563; }
+  table { border-collapse: collapse; width: 100%; margin-top: 18px; }
+  th, td { border: 1px solid #e6e9ef; padding: 12px; text-align: left; vertical-align: top; }
+  th { background: #e3f2fd; color: #1565c0; font-weight: 600; }
+  tr:nth-child(even) { background: #fbfdff; }
+  code { font-family: Consolas, 'Courier New', monospace; background: #f6f8fa; padding: 2px 6px; border-radius: 4px; }
+  .indent-1 { padding-left: 18px; }
+  .indent-2 { padding-left: 36px; }
+  .indent-3 { padding-left: 54px; }
+  .emoji { font-size: 1.05em; margin-right: 8px; }
+  .small { font-size: 0.95em; color: #6b7280; }
+  .footer { text-align: right; color: #888; font-size: 0.95em; margin-top: 26px; }
+  @media (max-width: 800px){ .container{ padding:18px } th, td{ padding:10px } }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>📁 Estructura de Directorios (completa)</h1>
+  <p class="lead">Listado jerarquizado de todos los paquetes y archivos que me enviaste. Cada fila corresponde a un elemento (paquete o archivo) con su tipo, funcionalidad técnica y observaciones.</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>📂 Elemento</th>
+        <th>🧩 Tipo</th>
+        <th>⚙️ Funcionalidad técnica</th>
+        <th>🗒️ Observaciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Root package -->
+      <tr>
+        <td><span class="emoji">📁</span><code>com.intelidata.acgr.pruebatecnica</code></td>
+        <td>Paquete raíz</td>
+        <td>Contenedor principal de la aplicación; punto de escaneo de componentes de Spring.</td>
+        <td class="small">Contiene subpaquetes: adapter, application, domain, infrastructure.</td>
+      </tr>
+
+      <tr>
+        <td class="indent-1"><span class="emoji">📄</span><code>SpringbootLambdaApplication.java</code></td>
+        <td>Clase principal</td>
+        <td>Arranca la aplicación Spring Boot (`SpringApplication.run(...)`).</td>
+        <td class="small">Punto de entrada; activa ComponentScan y auto-configuración.</td>
+      </tr>
+
+      <!-- domain -->
+      <tr>
+        <td class="indent-1"><span class="emoji">📁</span><code>domain</code></td>
+        <td>Paquete</td>
+        <td>Contiene el modelo de dominio (entidades puras).</td>
+        <td class="small">Independiente de frameworks (sin anotaciones JPA aquí).</td>
+      </tr>
+
+      <tr>
+        <td class="indent-2"><span class="emoji">📄</span><code>User.java</code></td>
+        <td>Entidad de dominio</td>
+        <td>Modelo de usuario con id, name, email; equals/hashCode definidos.</td>
+        <td class="small">Usado por servicios de aplicación y adaptadores; serializable para JSON.</td>
+      </tr>
+
+      <!-- application -->
+      <tr>
+        <td class="indent-1"><span class="emoji">📁</span><code>application</code></td>
+        <td>Paquete</td>
+        <td>Capa de aplicación: casos de uso y puertos (interfaces).</td>
+        <td class="small">Orquesta la lógica sin depender de la infraestructura concreta.</td>
+      </tr>
+
+      <tr>
+        <td class="indent-2"><span class="emoji">📁</span><code>application.port.output</code></td>
+        <td>Paquete (puertos de salida)</td>
+        <td>Define contratos que la infraestructura debe implementar (repositorios).</td>
+        <td class="small">Sigue patrón Ports & Adapters.</td>
+      </tr>
+
+      <tr>
+        <td class="indent-3"><span class="emoji">📄</span><code>UserReadRepositoryPort.java</code></td>
+        <td>Interfaz (Read port)</td>
+        <td>Define método <code>findAll()</code> para listar usuarios desde el exterior.</td>
+        <td class="small">Separación de lectura/escritura (CQRS simple).</td>
+      </tr>
+
+      <tr>
+        <td class="indent-3"><span class="emoji">📄</span><code>UserWriteRepositoryPort.java</code></td>
+        <td>Interfaz (Write port)</td>
+        <td>Define métodos <code>save(User)</code> y <code>existsByEmail(String)</code>.</td>
+        <td class="small">Usado por servicios de aplicación para persistir y validar duplicados.</td>
+      </tr>
+
+      <tr>
+        <td class="indent-2"><span class="emoji">📁</span><code>application.service</code></td>
+        <td>Paquete (servicios)</td>
+        <td>Implementa casos de uso: crear y listar usuarios.</td>
+        <td class="small">Inyecta puertos para acceder a la infraestructura.</td>
+      </tr>
+
+      <tr>
+        <td class="indent-3"><span class="emoji">📄</span><code>CreateUserService.java</code></td>
+        <td>Servicio de aplicación</td>
+        <td>Valida email no nulo / no duplicado y delega <code>save</code> al puerto de escritura.</td>
+        <td class="small">Lanza <code>IllegalArgumentException</code> o <code>IllegalStateException("EMAIL_DUPLICATE")</code>.</td>
+      </tr>
+
+      <tr>
+        <td class="indent-3"><span class="emoji">📄</span><code>ListUsersService.java</code></td>
+        <td>Servicio de aplicación</td>
+        <td>Invoca <code>UserReadRepositoryPort.findAll()</code> y devuelve lista de usuarios.</td>
+        <td class="small">No aplica filtros ni paginación (podría extenderse).</td>
+      </tr>
+
+      <!-- adapter / persistence -->
+      <tr>
+        <td class="indent-1"><span class="emoji">📁</span><code>adapter.persistence</code></td>
+        <td>Paquete (adaptador de persistencia)</td>
+        <td>Contiene entidades JPA, repositorios Spring Data y adaptadores que implementan puertos.</td>
+        <td class="small">Implementa UserWriteRepositoryPort / UserReadRepositoryPort.</td>
+      </tr>
+
+      <tr>
+        <td class="indent-2"><span class="emoji">📄</span><code>UserEntity.java</code></td>
+        <td>Entidad JPA</td>
+        <td>Anotada con <code>@Entity</code>, mapea tabla <code>users</code> y columna única <code>email</code>.</td>
+        <td class="small">Contiene id, name, email; getters/setters estándar.</td>
+      </tr>
+
+      <tr>
+        <td class="indent-2"><span class="emoji">📄</span><code>SpringDataUserRepository.java</code></td>
+        <td>Interfaz JPA Repository</td>
+        <td>Extiende <code>JpaRepository<UserEntity, Long></code> y define <code>existsByEmail</code>, <code>findByEmail</code>.</td>
+        <td class="small">Spring Data genera implementación en runtime.</td>
+      </tr>
+
+      <tr>
+        <td class="indent-2"><span class="emoji">📄</span><code>JpaUserRepositoryAdapter.java</code></td>
+        <td>Adaptador (implementa puertos)</td>
+        <td>Implementa <code>UserReadRepositoryPort</code> y <code>UserWriteRepositoryPort</code>; mapea entre <code>User</code> y <code>UserEntity</code>.</td>
+        <td class="small">Convierte entidades a modelos de dominio y delega llamadas a SpringDataUserRepository.</td>
+      </tr>
+
+      <!-- adapter / rest -->
+      <tr>
+        <td class="indent-1"><span class="emoji">📁</span><code>adapter.rest</code></td>
+        <td>Paquete (adaptadores REST)</td>
+        <td>Controladores que exponen la API HTTP (comandos y queries).</td>
+        <td class="small">Se divide en subpaquetes: command, query, auth.</td>
+      </tr>
+
+      <tr>
+        <td class="indent-2"><span class="emoji">📁</span><code>adapter.rest.auth</code></td>
+        <td>Subpaquete</td>
+        <td>Controlador público para autenticación y generación de tokens JWT.</td>
+        <td class="small">Endpoint: <code>POST /auth/login</code>.</td>
+      </tr>
+
+      <tr>
+        <td class="indent-3"><span class="emoji">📄</span><code>AuthController.java</code></td>
+        <td>Controller REST</td>
+        <td>Recibe email (login simulado) y retorna JWT usando <code>JwtUtil.generateToken(email)</code>.</td>
+        <td class="small">No valida contraseña en esta demo; ideal para pruebas.</td>
+      </tr>
+
+      <tr>
+        <td class="indent-2"><span class="emoji">📁</span><code>adapter.rest.command</code></td>
+        <td>Subpaquete</td>
+        <td>Controladores de comando que modifican estado (ej. crear usuario).</td>
+        <td class="small">Exponen endpoints POST/PUT/DELETE en futuro.</td>
+      </tr>
+
+      <tr>
+        <td class="indent-3"><span class="emoji">📄</span><code>UserCommandController.java</code></td>
+        <td>Controller REST (Command)</td>
+        <td>Endpoint <code>POST /users</code> que recibe <code>User</code> y llama a <code>CreateUserService.createUser()</code>.</td>
+        <td class="small">Manejo de errores mapeado a códigos HTTP (409, 400, 500).</td>
+      </tr>
+
+      <tr>
+        <td class="indent-2"><span class="emoji">📁</span><code>adapter.rest.query</code></td>
+        <td>Subpaquete</td>
+        <td>Controladores de consulta (solo lectura).</td>
+        <td class="small">Separación Command vs Query (CQRS simplificado).</td>
+      </tr>
+
+      <tr>
+        <td class="indent-3"><span class="emoji">📄</span><code>UserQueryController.java</code></td>
+        <td>Controller REST (Query)</td>
+        <td>Endpoint <code>GET /users</code> que devuelve lista mediante <code>ListUsersService.listAll()</code>.</td>
+        <td class="small">Retorna lista de objetos de dominio <code>User</code>.</td>
+      </tr>
+
+      <!-- infrastructure -->
+      <tr>
+        <td class="indent-1"><span class="emoji">📁</span><code>infrastructure</code></td>
+        <td>Paquete</td>
+        <td>Configuraciones, seguridad, excepciones y recursos de infraestructura.</td>
+        <td class="small">Incluye config, security, exception, etc.</td>
+      </tr>
+
+      <tr>
+        <td class="indent-2"><span class="emoji">📁</span><code>infrastructure.config</code></td>
+        <td>Subpaquete</td>
+        <td>Beans de configuración y inicializadores de datos.</td>
+        <td class="small">Ej.: SwaggerConfig, DataInitializer.</td>
+      </tr>
+
+      <tr>
+        <td class="indent-3"><span class="emoji">📄</span><code>DataInitializer.java</code></td>
+        <td>Bean (CommandLineRunner)</td>
+        <td>Precarga usuarios si no existen (usa <code>UserWriteRepositoryPort</code>).</td>
+        <td class="small">Insertar datos de prueba en H2 al arrancar.</td>
+      </tr>
+
+      <tr>
+        <td class="indent-3"><span class="emoji">📄</span><code>SwaggerConfig.java</code></td>
+        <td>Bean OpenAPI</td>
+        <td>Configura metadatos OpenAPI y esquema de seguridad Bearer (JWT) para Swagger UI.</td>
+        <td class="small">Define dos beans OpenAPI (uno primario con seguridad).</td>
+      </tr>
+
+      <tr>
+        <td class="indent-2"><span class="emoji">📁</span><code>infrastructure.exception</code></td>
+        <td>Subpaquete</td>
+        <td>Manejadores globales para transformar excepciones en respuestas HTTP coherentes.</td>
+        <td class="small">Centraliza códigos 400, 409 y 500.</td>
+      </tr>
+
+      <tr>
+        <td class="indent-3"><span class="emoji">📄</span><code>GlobalExceptionHandler.java</code></td>
+        <td>ControllerAdvice</td>
+        <td>Intercepta <code>IllegalStateException</code>, <code>IllegalArgumentException</code>, y genéricas.</td>
+        <td class="small">Retorna JSON con clave "error" y mensajes adecuados.</td>
+      </tr>
+
+      <tr>
+        <td class="indent-2"><span class="emoji">📁</span><code>infrastructure.security</code></td>
+        <td>Subpaquete</td>
+        <td>Módulo de autenticación y autorización (JWT + Spring Security).</td>
+        <td class="small">Incluye utilidades, filtros y configuración del resource server.</td>
+      </tr>
+
+      <tr>
+        <td class="indent-3"><span class="emoji">📄</span><code>JwtUtil.java</code></td>
+        <td>Componente</td>
+        <td>Genera y valida tokens JWT con clave simétrica (JJWT).</td>
+        <td class="small">Métodos: <code>generateToken</code>, <code>validateToken</code>, <code>extractEmail</code>.</td>
+      </tr>
+
+      <tr>
+        <td class="indent-3"><span class="emoji">📄</span><code>JwtDecoderConfig.java</code></td>
+        <td>Bean</td>
+        <td>Provee <code>JwtDecoder</code> (Nimbus) configurado con la misma clave HMAC SHA-256.</td>
+        <td class="small">Asegura compatibilidad con Spring Security resource server.</td>
+      </tr>
+
+      <tr>
+        <td class="indent-3"><span class="emoji">📄</span><code>JwtAuthFilter.java</code></td>
+        <td>Filtro HTTP</td>
+        <td>Verifica encabezado <code>Authorization: Bearer &lt;token&gt;</code> y valida token via <code>JwtUtil</code>.</td>
+        <td class="small">Extiende <code>OncePerRequestFilter</code>; devuelve 401 si token inválido.</td>
+      </tr>
+
+      <tr>
+        <td class="indent-3"><span class="emoji">📄</span><code>SecurityConfig.java</code></td>
+        <td>Configuración de seguridad</td>
+        <td>Define <code>SecurityFilterChain</code>, rutas públicas (/auth/**) y protegidas (/users/**); session stateless; integra <code>JwtDecoder</code>.</td>
+        <td class="small">Usa <code>oauth2ResourceServer().jwt()</code> para validación.</td>
+      </tr>
+
+      <!-- tests & resources -->
+      <tr>
+        <td class="indent-1"><span class="emoji">📁</span><code>resources</code></td>
+        <td>Directorio</td>
+        <td>Contiene propiedades, scripts SQL, y recursos estáticos.</td>
+        <td class="small">Ej.: <code>application.yml</code>, posibles <code>data.sql</code>.</td>
+      </tr>
+
+      <tr>
+        <td class="indent-1"><span class="emoji">📁</span><code>test</code></td>
+        <td>Directorio de pruebas</td>
+        <td>Clases de test para verificar arranque y comportamiento (JUnit).</td>
+        <td class="small">Incluye clase test nombrada en tu repo (p. ej. <code>ProyectoAcgrBbvaCambioDivisasApplicationTests</code> si existe).</td>
+      </tr>
+
+      <tr>
+        <td class="indent-2"><span class="emoji">📄</span><code>ProyectoAcgrBbvaCambioDivisasApplicationTests.java</code></td>
+        <td>Clase de test (ejemplo)</td>
+        <td>Comprueba que el contexto de Spring arranca correctamente.</td>
+        <td class="small">Nombre referenciado en conversaciones previas; reemplazar por tus tests reales.</td>
+      </tr>
+
+    </tbody>
+  </table>
+
+  <div class="footer">
+    📄 Documentado por <strong>Aura Cristina Garzón Rodríguez</strong> · Octubre 2025
+  </div>
+</div>
+</body>
+</html>

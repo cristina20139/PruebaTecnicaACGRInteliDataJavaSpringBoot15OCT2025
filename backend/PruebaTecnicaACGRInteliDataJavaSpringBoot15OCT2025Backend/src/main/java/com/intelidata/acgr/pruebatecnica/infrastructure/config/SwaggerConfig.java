@@ -1,3 +1,4 @@
+// com/intelidata/acgr/pruebatecnica/infrastructure/config/SwaggerConfig.java
 package com.intelidata.acgr.pruebatecnica.infrastructure.config;
 
 import io.swagger.v3.oas.models.ExternalDocumentation;

@@ -1,3 +1,4 @@
+// com/intelidata/acgr/pruebatecnica/infrastructure/config/DataInitializer.java
 package com.intelidata.acgr.pruebatecnica.infrastructure.config;
 
 import com.intelidata.acgr.pruebatecnica.domain.model.User;

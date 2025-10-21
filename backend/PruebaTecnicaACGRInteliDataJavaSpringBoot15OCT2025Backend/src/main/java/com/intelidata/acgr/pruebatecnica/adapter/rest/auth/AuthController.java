@@ -1,3 +1,4 @@
+// com/intelidata/acgr/pruebatecnica/adapter/rest/auth/AuthController.java
 package com.intelidata.acgr.pruebatecnica.adapter.rest.auth;
 
 import com.intelidata.acgr.pruebatecnica.infrastructure.security.JwtUtil;

@@ -1,3 +1,4 @@
+// com/intelidata/acgr/pruebatecnica/infrastructure/exception/GlobalExceptionHandler.java
 package com.intelidata.acgr.pruebatecnica.infrastructure.exception;
 
 import org.springframework.http.HttpStatus;

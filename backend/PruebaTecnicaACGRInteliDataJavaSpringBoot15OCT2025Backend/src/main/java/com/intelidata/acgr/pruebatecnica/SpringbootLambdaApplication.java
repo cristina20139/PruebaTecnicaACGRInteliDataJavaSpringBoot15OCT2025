@@ -1,5 +1,6 @@
 // Indica el paquete raíz del proyecto.
 // Todas las demás clases se organizan en subpaquetes bajo este.
+// com/intelidata/acgr/pruebatecnica/SpringbootLambdaApplication.java
 package com.intelidata.acgr.pruebatecnica;
 
 // Importa la clase principal de Spring Boot usada para iniciar la aplicación.

@@ -1,3 +1,4 @@
+// com/intelidata/acgr/pruebatecnica/adapter/persistence/JpaUserRepositoryAdapter.java
 package com.intelidata.acgr.pruebatecnica.adapter.persistence;
 
 import com.intelidata.acgr.pruebatecnica.application.port.output.UserReadRepositoryPort;

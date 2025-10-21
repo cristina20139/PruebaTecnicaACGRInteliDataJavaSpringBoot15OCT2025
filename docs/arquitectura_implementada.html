@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Arquitecturas Implementadas - Proyecto Spring Boot</title>
+<style>
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #fafbfc; color: #23272f; margin: 0; padding: 0; }
+  .container { max-width: 950px; margin: 40px auto; background: #fff; box-shadow: 0 8px 32px rgba(0,0,0,0.08); border-radius: 10px; padding: 32px 40px; }
+  h1 { color: #1565c0; }
+  h2 { color: #2e7d32; margin-top: 32px; }
+  h3 { color: #7b1fa2; margin-top: 24px; }
+  .note { background: #e3f2fd; border-left: 4px solid #1976d2; padding: 16px 20px; margin: 18px 0; border-radius: 7px; }
+  .note ul { list-style: disc inside; margin: 0; padding-left: 1.2em; }
+  .note li { margin-bottom: 3px; line-height: 1.35; }
+  .note p { margin: 0 0 6px 0; line-height: 1.5; }
+  .footer { text-align: right; color: #888; font-size: 1em; margin-top: 40px; }
+  .tag { background: #e3f2fd; color: #1565c0; border-radius: 4px; padding: 3px 8px; margin-left: 6px; font-size: 0.95em; }
+  dt { color: #2e7d32; font-weight: bold; margin-top: 10px; }
+  dd { margin-bottom: 10px; }
+  .params table { border-collapse: collapse; width: 100%; margin: 10px 0; }
+  .params th, .params td { border: 1px solid #ccc; padding: 6px; }
+  .important { background: #fffde7; border-left: 4px solid #fbc02d; padding: 12px 18px; margin: 18px 0; border-radius: 5px; }
+  .sideEffects ul, .solid ul { margin: 0; padding-left: 20px; }
+  @media (max-width: 600px) { .container { padding: 16px 8px; } }
+  pre { background: #f6f8fa; padding: 14px; border-radius: 8px; overflow: auto; font-size: 0.92em; }
+  code { font-family: Consolas, 'Courier New', monospace; }
+  .row { display:flex; gap:20px; flex-wrap:wrap; }
+  .col { flex:1 1 420px; }
+  .endpoint { border: 1px solid #e0e0e0; padding: 12px 14px; border-radius: 8px; background: #fff; box-shadow: 0 3px 8px rgba(0,0,0,0.04); }
+  .json { white-space: pre; font-family: Consolas, 'Courier New', monospace; font-size: 0.95em; }
+  .success { color: #2e7d32; font-weight: 600; }
+  .error { color: #c62828; font-weight: 600; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Arquitecturas Implementadas en el Proyecto Spring Boot</h1>
+  <p>El proyecto <strong>com.intelidata.acgr.pruebatecnica</strong> implementa múltiples enfoques arquitectónicos modernos que garantizan mantenibilidad, escalabilidad y seguridad. A continuación se describen con detalle técnico.</p>
+
+  <h2>1. Arquitectura Hexagonal (Ports & Adapters)</h2>
+  <div class="note">
+    <p>Esta arquitectura divide el sistema en capas que se comunican mediante interfaces (“puertos”). Los adaptadores externos (REST, seguridad, base de datos) interactúan con el núcleo de la aplicación sin acoplarla a frameworks específicos.</p>
+    <ul>
+      <li><strong>Adaptadores de Entrada:</strong> Controladores REST (<code>AuthController.java</code>).</li>
+      <li><strong>Adaptadores de Infraestructura:</strong> Seguridad JWT (<code>JwtUtil.java</code>, <code>SecurityConfig.java</code>).</li>
+      <li><strong>Núcleo:</strong> Clases de dominio y servicios (en este caso, la lógica de autenticación).</li>
+    </ul>
+  </div>
+
+  <pre><code>package com.intelidata.acgr.pruebatecnica.adapter.rest.auth;
+
+@RestController
+@RequestMapping("/auth")
+public class AuthController {
+
+    private final JwtUtil jwtUtil;
+
+    public AuthController(JwtUtil jwtUtil) {
+        this.jwtUtil = jwtUtil;
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity&lt;Map&lt;String, String&gt;&gt; login(@RequestBody UserDTO user) {
+        // Lógica central delegada al núcleo de negocio
+        String token = jwtUtil.generateToken(user.getUsername());
+        return ResponseEntity.ok(Map.of("token", token));
+    }
+}
+</code></pre>
+
+  <div class="important">
+    <p><strong>Ventajas técnicas:</strong></p>
+    <ul>
+      <li>Separación total entre lógica de negocio e infraestructura.</li>
+      <li>Facilita pruebas unitarias y mock de dependencias.</li>
+      <li>Posible evolución hacia microservicios sin reescribir el core.</li>
+    </ul>
+  </div>
+
+  <h2>2. Arquitectura Basada en Servicios (RESTful API)</h2>
+  <p>La aplicación expone endpoints HTTP siguiendo los principios REST, usando JSON como formato de intercambio.</p>
+
+  <div class="endpoint">
+    <strong>POST /auth/login</strong><br>
+    <span class="tag">Entrada</span>
+    <pre class="json">{ "username": "acgarzon", "password": "12345" }</pre>
+    <span class="tag">Salida</span>
+    <pre class="json">{ "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6..." }</pre>
+  </div>
+
+  <div class="note">
+    <p><strong>Configuración de endpoints:</strong></p>
+    <pre><code>http.authorizeHttpRequests(auth -&gt; auth
+    .requestMatchers("/auth/**").permitAll()
+    .requestMatchers("/users/**").authenticated()
+    .anyRequest().permitAll());</code></pre>
+  </div>
+
+  <h2>3. Arquitectura de Seguridad JWT (Token-Based Authentication)</h2>
+  <p>El sistema usa <strong>JSON Web Tokens</strong> para autenticar usuarios sin mantener estado en el servidor.</p>
+
+  <pre><code>public class JwtUtil {
+
+    private final String SECRET_KEY = "MiClaveSecreta12345";
+
+    public String generateToken(String username) {
+        return Jwts.builder()
+                .setSubject(username)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + 3600000)) // 1 hora
+                .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
+                .compact();
+    }
+
+    public boolean validateToken(String token) {
+        try {
+            Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+}</code></pre>
+
+  <div class="note">
+    <ul>
+      <li>El token viaja en la cabecera HTTP: <code>Authorization: Bearer &lt;token&gt;</code></li>
+      <li>Valida integridad y expiración sin requerir base de datos.</li>
+      <li>Ideal para despliegues sin sesión (Lambda, Kubernetes).</li>
+    </ul>
+  </div>
+
+  <h2>4. Arquitectura Monolítica Modular</h2>
+  <p>Aunque usa principios limpios, el proyecto se ejecuta como una única aplicación <strong>Spring Boot</strong> que agrupa los módulos internos en paquetes bien organizados.</p>
+
+  <pre><code>com.intelidata.acgr.pruebatecnica
+ ┣ adapter.rest.auth → Controladores REST
+ ┣ infrastructure.security → Seguridad y JWT
+ ┣ SpringbootLambdaApplication → Clase principal
+</code></pre>
+
+  <div class="important">
+    <p><strong>Ventajas:</strong> simplicidad de despliegue, facilidad de mantenimiento y posibilidad de refactorización hacia microservicios.</p>
+  </div>
+
+  <h2>5. Arquitectura Stateless</h2>
+  <p>La sesión del usuario no se guarda en el servidor. Cada solicitud contiene su propio token JWT.</p>
+
+  <pre><code>http.sessionManagement(session -&gt;
+    session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));</code></pre>
+
+  <p>Esto es esencial para entornos <strong>serverless</strong> o <strong>contenedorizados</strong>, como AWS Lambda o EKS.</p>
+
+  <h2>Resumen Técnico</h2>
+  <div class="params">
+    <table>
+      <tr><th>Arquitectura</th><th>Rol</th><th>Archivos Clave</th></tr>
+      <tr><td>Hexagonal / Limpia</td><td>Separación de responsabilidades</td><td><code>AuthController</code>, <code>JwtUtil</code>, <code>SecurityConfig</code></td></tr>
+      <tr><td>RESTful</td><td>Interfaz HTTP JSON</td><td><code>AuthController</code></td></tr>
+      <tr><td>JWT Stateless</td><td>Seguridad sin sesión</td><td><code>JwtAuthFilter</code>, <code>JwtUtil</code></td></tr>
+      <tr><td>Monolítica modular</td><td>Estructura del proyecto</td><td><code>SpringbootLambdaApplication</code></td></tr>
+      <tr><td>Stateless</td><td>Optimizada para nube / serverless</td><td><code>SecurityConfig</code></td></tr>
+    </table>
+  </div>
+
+  <div class="footer">
+    <p>Documento generado por Aura Cristina Garzón Rodríguez – Análisis técnico de arquitectura Spring Boot 2025</p>
+  </div>
+</div>
+</body>
+</html>

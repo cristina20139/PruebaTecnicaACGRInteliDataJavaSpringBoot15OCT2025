@@ -1,3 +1,4 @@
+// com/intelidata/acgr/pruebatecnica/adapter/persistence/SpringDataUserRepository.java
 package com.intelidata.acgr.pruebatecnica.adapter.persistence;
 
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -1,3 +1,4 @@
+// com/intelidata/acgr/pruebatecnica/infrastructure/security/SecurityConfig.java
 package com.intelidata.acgr.pruebatecnica.infrastructure.security;
 
 import org.springframework.context.annotation.Bean;

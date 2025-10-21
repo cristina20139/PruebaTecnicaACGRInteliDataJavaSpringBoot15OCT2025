@@ -1,3 +1,4 @@
+// com/intelidata/acgr/pruebatecnica/infrastructure/security/JwtAuthFilter.java
 package com.intelidata.acgr.pruebatecnica.infrastructure.security;
 
 import jakarta.servlet.FilterChain;

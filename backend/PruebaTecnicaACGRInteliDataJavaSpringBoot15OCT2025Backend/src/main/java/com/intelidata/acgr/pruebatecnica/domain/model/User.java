@@ -1,3 +1,4 @@
+// com/intelidata/acgr/pruebatecnica/domain/model/User.java
 package com.intelidata.acgr.pruebatecnica.domain.model;
 
 import java.util.Objects;
